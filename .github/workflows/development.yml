@@ -1,11 +1,11 @@
 name: deployment_develop
 
 on:
-  push:
+  push
     # branch: development
-    paths:
-    - 'backend/**'
-    - 'server/**'
+    # paths:
+    # - 'backend/**'
+    # - 'server/**'
 
 env:
   DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }} 

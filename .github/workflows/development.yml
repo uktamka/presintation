@@ -39,21 +39,21 @@ jobs:
     - name: Run backend service
       run: docker-compose -f docker-compose-dev.yml up -d backend
 
-    server:
-      runs-on: ubuntu
-      needs: [database, backend]
+  server:
+    runs-on: ubuntu
+    needs: [database, backend]
 
-      steps: 
-      - uses: actions/checkout@v2
+    steps: 
+    - uses: actions/checkout@v2
 
-      - name: Build server service
-        run: docker-compose -f docker-compose-dev.yml build server
+    - name: Build server service
+      run: docker-compose -f docker-compose-dev.yml build server
 
-      - name: Stop server service
-        run: docker-compose -f docker-compose-dev.yml stop server
+    - name: Stop server service
+      run: docker-compose -f docker-compose-dev.yml stop server
 
-      - name: Run server service
-        run: docker-compose -f docker-compose-dev.yml up -d server
+    - name: Run server service
+      run: docker-compose -f docker-compose-dev.yml up -d server
 
-      - name: Clear docker
-        run: docker rmi $(docker images -f dangling=true -q)
+    - name: Clear docker
+      run: docker rmi $(docker images -f dangling=true -q)

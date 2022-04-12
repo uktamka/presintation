@@ -1,0 +1,59 @@
+name: deployment_develop
+
+on:
+  push:
+    # branch: development
+    paths:
+    - 'backend/**'
+    - 'server/**'
+
+jobs: 
+  database: 
+    runs-on: ubuntu-latest
+
+    steps: 
+    - uses: actions/checkout@v2
+
+    - name: Build backend service
+      run: docker-compose -f docker-compose-dev.yml build data-base
+
+    - name: Stop data-base service
+      run: docker-compose -f docker-compose-dev.yml stop data-base
+
+    - name: Run data-base service
+      run: docker-compose -f docker-compose-dev.yml up -d data-base
+
+  backend:
+    runs-on: ubuntu
+    needs: database
+
+    steps: 
+    - uses: actions/checkout@v2
+
+    - name: Build backend service
+      run: docker-compose -f docker-compose-dev.yml build backend
+
+    - name: Stop backend service
+      run: docker-compose -f docker-compose-dev.yml stop backend
+
+    - name: Run backend service
+      run: docker-compose -f docker-compose-dev.yml up -d backend
+
+    server:
+      runs-on: ubuntu
+      needs: [database, backend]
+
+      steps: 
+      - uses: actions/checkout@v2
+
+      - name: Build server service
+        run: docker-compose -f docker-compose-dev.yml build server
+
+      - name: Stop server service
+        run: docker-compose -f docker-compose-dev.yml stop server
+
+      - name: Run server service
+        run: docker-compose -f docker-compose-dev.yml up -d server
+
+      - name: Clear docker
+        run: docker rmi $(docker images -f dangling=true -q)

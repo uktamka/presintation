@@ -1,0 +1,15 @@
+name: deployment_prodaction
+
+on:
+  push:
+    branch: prodaction
+
+jobs: 
+  test: 
+    runs-on: ubuntu-latest
+
+    steps: 
+    - uses: actions/checkout@v2
+
+    - name: prodaction
+      run: echo "prodaction"

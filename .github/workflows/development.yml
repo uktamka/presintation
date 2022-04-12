@@ -63,4 +63,4 @@ jobs:
       run: docker-compose -f docker-compose-dev.yml up -d server
 
     - name: Clear docker
-      run: docker rmi $(docker images -f dangling=true -q)
+      run: docker rmi $(docker images -f dangling=true -q) || true

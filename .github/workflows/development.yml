@@ -24,8 +24,8 @@ jobs:
     - name: Build backend service
       run: docker-compose -f docker-compose-dev.yml build data-base
 
-    - name: Stop data-base service
-      run: docker-compose -f docker-compose-dev.yml stop data-base
+    - name: Stop and remove data-base service
+      run: docker-compose -f docker-compose-dev.yml rm -f -s data-base
 
     - name: Run data-base service
       run: docker-compose -f docker-compose-dev.yml up -d data-base
@@ -40,15 +40,31 @@ jobs:
     - name: Build backend service
       run: docker-compose -f docker-compose-dev.yml build backend
 
-    - name: Stop backend service
-      run: docker-compose -f docker-compose-dev.yml stop backend
+    - name: Stop and remove backend service
+      run: docker-compose -f docker-compose-dev.yml rm -f -s backend
 
     - name: Run backend service
       run: docker-compose -f docker-compose-dev.yml up -d backend
 
+  frontend:
+    runs-on: ubuntu-latest
+    needs: backend
+
+    steps: 
+    - uses: actions/checkout@v2
+
+    - name: Build frontend service
+      run: docker-compose -f docker-compose-dev.yml build frontend
+
+    - name: Stop and remove frontend service
+      run: docker-compose -f docker-compose-dev.yml rm -f -s frontend
+
+    - name: Run frontend service
+      run: docker-compose -f docker-compose-dev.yml up -d frontend
+
   server:
     runs-on: ubuntu-latest
-    needs: [database, backend]
+    needs: [database, backend, frontend]
 
     steps: 
     - uses: actions/checkout@v2
@@ -56,8 +72,8 @@ jobs:
     - name: Build server service
       run: docker-compose -f docker-compose-dev.yml build server
 
-    - name: Stop server service
-      run: docker-compose -f docker-compose-dev.yml stop server
+    - name: Stop and remove server service
+      run: docker-compose -f docker-compose-dev.yml rm -f -s server
 
     - name: Run server service
       run: docker-compose -f docker-compose-dev.yml up -d server

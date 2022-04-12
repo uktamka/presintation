@@ -14,7 +14,7 @@ x-django:
     - POSTGRES_DB=${POSTGRES_DB}
     - POSTGRES_USER=${POSTGRES_USER}
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    - POSTGRES_HOST=${POSTGRES_HOST}
+    - POSTGRES_HOST=postgres-presintation
     - POSTGRES_PORT=${POSTGRES_PORT}
 
 services:
@@ -50,5 +50,12 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  frontend:
+    build: ./frontend
+    container_name: frontend-presintation
+    restart: "on-failure"
+    depends_on:
+    - backend
+    command: node node_modules/vite/bin/vite.js preview --port 80 --host
 volumes:
   db_data:
